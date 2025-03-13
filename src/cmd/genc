@@ -1,0 +1,4 @@
+#!/bin/sh
+
+gengetopt -i opt.ggo
+

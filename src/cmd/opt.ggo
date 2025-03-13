@@ -1,0 +1,6 @@
+package "udscast"
+version "0.1"
+purpose "Broadcast to all clients"
+
+option "domain" d "Absolute path of server socket" string required
+
