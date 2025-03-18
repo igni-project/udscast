@@ -17,20 +17,20 @@ int main(int argc, char** argv)
 	
 	/* Server socket */
 	struct sockaddr_un sv_addr;
-	int srvFd;
+	int srv_fd;
 
 	/* Variables for accept() */
-	struct sockaddr_un tmpAddr = {0};
-	socklen_t tmpAddrSz = 0;
-	int newFd;
+	struct sockaddr_un tmp_addr = {0};
+	socklen_t tmp_addr_sz = 0;
+	int new_fd;
 
 	/* Set of all sockets */
-	fd_set readFds;
-	int maxFd;
+	fd_set read_fds;
+	int max_fd;
 
 	/* Client sockets */
-	sockArr clients;
-	int clientFd;
+	sock_arr clients;
+	int client_fd;
 
 	/* Counter */
 	int i;
@@ -41,8 +41,8 @@ int main(int argc, char** argv)
 	/* Parse command line arguments */
 	cmdline_parser(argc, argv, &args_info);
 
-	srvFd = socket(AF_UNIX, SOCK_STREAM, 0);
-	if (srvFd == -1)
+	srv_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (srv_fd == -1)
 	{
 		perror("Failed to create server socket");
 		return -1;
@@ -50,19 +50,19 @@ int main(int argc, char** argv)
 
 	sv_addr.sun_family = AF_UNIX;
 	strncpy(sv_addr.sun_path, args_info.domain_arg, sizeof(sv_addr.sun_path));
-	if (bind(srvFd, (struct sockaddr*)&sv_addr, sizeof(sv_addr)) == -1)
+	if (bind(srv_fd, (struct sockaddr*)&sv_addr, sizeof(sv_addr)) == -1)
 	{
 		perror("Failed to bind server socket");
 		return -1;
 	}
 
-	if (listen(srvFd, 10) == -1)
+	if (listen(srv_fd, 10) == -1)
 	{
 		perror("Failed to open server socket for listening");
 		return -1;
 	}
 
-	if (createSockArr(&clients) == -1)
+	if (create_sock_arr(&clients) == -1)
 	{
 		printf("Failed to create socket array.\n");
 		return -1;
@@ -70,23 +70,23 @@ int main(int argc, char** argv)
 
 	while (1)
 	{
-		FD_ZERO(&readFds);
-		FD_SET(srvFd, &readFds);
+		FD_ZERO(&read_fds);
+		FD_SET(srv_fd, &read_fds);
 
 		i = 0;
 		while (i < clients.count)
 		{
-			clientFd = clients.fds[i];
+			client_fd = clients.fds[i];
 
-			if (clientFd > 0) FD_SET(clientFd, &readFds);
+			if (client_fd > 0) FD_SET(client_fd, &read_fds);
 
-			if (clientFd > maxFd) maxFd = clientFd;
+			if (client_fd > max_fd) max_fd = client_fd;
 
 			++i;
 		}
 
 		/* Wait until a socket is active */
-		activity = select(maxFd + 1, &readFds, 0, 0, 0);
+		activity = select(max_fd + 1, &read_fds, 0, 0, 0);
 
 		if (activity == -1 && errno != EINTR)
 		{
@@ -94,27 +94,27 @@ int main(int argc, char** argv)
 		}
 
 		/* Activity on the server socket means a new connection */
-		if (FD_ISSET(srvFd, &readFds))
+		if (FD_ISSET(srv_fd, &read_fds))
 		{
-			newFd = accept(srvFd, (struct sockaddr*)&tmpAddr, &tmpAddrSz);
-			if (newFd == -1)
+			new_fd = accept(srv_fd, (struct sockaddr*)&tmp_addr, &tmp_addr_sz);
+			if (new_fd == -1)
 			{
 				perror("Failed to accept client");
 			}
 			else
 			{
-				addNewClient(&clients, newFd);
+				add_new_client(&clients, new_fd);
 			}
 		}
 
 		i = clients.count - 1;
 		while (i != -1)
 		{
-			clientFd = clients.fds[i];
+			client_fd = clients.fds[i];
 			
-			if (FD_ISSET(clientFd, &readFds))
+			if (FD_ISSET(client_fd, &read_fds))
 			{
-				procMsg(&clients, i);
+				proc_msg(&clients, i);
 			}
 
 			--i;
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 	}
 
 	/* Closing the server socket out of courtesy */
-	close(srvFd);
+	close(srv_fd);
 
 	return 0;
 }

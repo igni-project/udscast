@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-typedef struct sockArr_t
+typedef struct sock_arr_t
 {
 	/* Socket descriptors */
 	int *fds;
@@ -11,13 +11,13 @@ typedef struct sockArr_t
 	int count;
 	/* Maximum number of sockets before reallocation needed */
 	int max;
-} sockArr;
+} sock_arr;
 
-int createSockArr(sockArr *arr);
-int addNewClient(sockArr *arr, int fd);
-int removeClient(sockArr *arr, int idx);
+int create_sock_arr(sock_arr *arr);
+int add_new_client(sock_arr *arr, int fd);
+int remove_client(sock_arr *arr, int idx);
 
-int procMsg(sockArr *arr, int idx);
+int proc_msg(sock_arr *arr, int idx);
 
 #endif
 

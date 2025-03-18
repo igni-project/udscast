@@ -12,7 +12,7 @@
 /* buffer for recv() to put received data in */
 char buffer[MSG_BUFFER_SIZE];
 
-int createSockArr(sockArr* arr)
+int create_sock_arr(sock_arr* arr)
 {
 	arr->count = 0;
 	arr->max = 1;
@@ -26,23 +26,23 @@ int createSockArr(sockArr* arr)
 	return 0;
 }
 
-int addNewClient(sockArr *arr, int fd)
+int add_new_client(sock_arr *arr, int fd)
 {
 	/* The reallocated address is audited before use */
-	int *newAddr;
+	int *new_addr;
 
 	if (arr->count >= arr->max)
 	{
 		arr->max *= 2;
-		newAddr = realloc(arr->fds, arr->max);
+		new_addr = realloc(arr->fds, arr->max);
 
-		if (!newAddr)
+		if (!new_addr)
 		{
-			perror("addNewClient() failed: could not allocate memory");
+			perror("add_new_client() failed: could not allocate memory");
 			return -1;
 		}
 
-		arr->fds = newAddr;
+		arr->fds = new_addr;
 	}
 
 	arr->fds[arr->count] = fd;
@@ -52,10 +52,10 @@ int addNewClient(sockArr *arr, int fd)
 	return 0;
 }
 
-int removeClient(sockArr *arr, int idx)
+int remove_client(sock_arr *arr, int idx)
 {
 	/* The reallocated address is audited before use */
-	int *newAddr;
+	int *new_addr;
 
 	--arr->count;
 
@@ -68,49 +68,49 @@ int removeClient(sockArr *arr, int idx)
 	if (arr->count < arr->max / 2)
 	{
 		arr->max /= 2;
-		newAddr = realloc(arr->fds, arr->max);
+		new_addr = realloc(arr->fds, arr->max);
 
-		if (!newAddr)
+		if (!new_addr)
 		{
-			perror("removeClient() failed: could not allocate memory");
+			perror("remove_client() failed: could not allocate memory");
 			return -1;
 		}
 
-		arr->fds = newAddr;
+		arr->fds = new_addr;
 	}
 
 	return 0;
 }
 
-int procMsg(sockArr *arr, int idx)
+int proc_msg(sock_arr *arr, int idx)
 {
 	/* counter */
 	int i;
 
 	/* Socket that received message to process */
-	int clientFd = arr->fds[idx];
+	int client_fd = arr->fds[idx];
 
-	int recvDataSz;
-	recvDataSz = recv(clientFd, buffer, MSG_BUFFER_SIZE, 0);
+	int data_sz;
+	data_sz = recv(client_fd, buffer, MSG_BUFFER_SIZE, 0);
 
-	if (recvDataSz == -1)
+	if (data_sz == -1)
 	{
 		perror("An error occurred while receiving data");
-		removeClient(arr, idx);
+		remove_client(arr, idx);
 		return 0;
 	}
 
 	/* A message size of 0 means client has disconnected */
-	if (!recvDataSz)
+	if (!data_sz)
 	{
-		removeClient(arr, idx);
+		remove_client(arr, idx);
 		return 0;
 	}
 
 	i = 0;
 	while (i < arr->count)
 	{
-		if (send(arr->fds[i], buffer, recvDataSz, 0) == -1)
+		if (send(arr->fds[i], buffer, data_sz, 0) == -1)
 		{
 			perror("Failed to send message");
 		}
