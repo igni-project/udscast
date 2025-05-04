@@ -1,7 +1,7 @@
 
 m4_define([MAJOR_V], [0])
 m4_define([MINOR_V], [1])
-m4_define([PATCH_V], [0])
+m4_define([PATCH_V], [1])
 
 AC_INIT([udscast], MAJOR_V.MINOR_V.PATCH_V)
 CFLAGS="$CFLAGS -DMAJ_V="MAJOR_V" -DMIN_V="MINOR_V" -DPATCH_V="PATCH_V

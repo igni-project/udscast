@@ -72,6 +72,7 @@ int main(int argc, char** argv)
 	{
 		FD_ZERO(&read_fds);
 		FD_SET(srv_fd, &read_fds);
+		max_fd = srv_fd;
 
 		i = 0;
 		while (i < clients.count)
