@@ -82,7 +82,7 @@ int remove_client(sock_arr *arr, int idx)
 	return 0;
 }
 
-int proc_msg(sock_arr *arr, int idx)
+int proc_msg(sock_arr *arr, int idx, char echoback)
 {
 	/* counter */
 	int i;
@@ -108,6 +108,27 @@ int proc_msg(sock_arr *arr, int idx)
 	}
 
 	i = 0;
+
+	while (i < idx)
+	{
+		if (send(arr->fds[i], buffer, data_sz, 0) == -1)
+		{
+			perror("Failed to send message");
+		}
+
+		++i;
+	}
+
+	if (echoback)
+	{
+		if (send(arr->fds[i], buffer, data_sz, 0) == -1)
+		{
+			perror("Failed to send message");
+		}
+	}
+
+	++i;
+
 	while (i < arr->count)
 	{
 		if (send(arr->fds[i], buffer, data_sz, 0) == -1)

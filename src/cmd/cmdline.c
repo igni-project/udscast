@@ -36,11 +36,13 @@ const char *gengetopt_args_info_description = "";
 const char *gengetopt_args_info_help[] = {
   "  -h, --help           Print help and exit",
   "  -V, --version        Print version and exit",
-  "  -d, --domain=STRING  Path to server socket",
+  "  -d, --domain=STRING  Absolute path of server socket",
+  "  -e, --no-echo        Do not return recieved messages to their sender\n                         (default=off)",
     0
 };
 
 typedef enum {ARG_NO
+  , ARG_FLAG
   , ARG_STRING
 } cmdline_parser_arg_type;
 
@@ -65,6 +67,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
   args_info->domain_given = 0 ;
+  args_info->no_echo_given = 0 ;
 }
 
 static
@@ -73,6 +76,7 @@ void clear_args (struct gengetopt_args_info *args_info)
   FIX_UNUSED (args_info);
   args_info->domain_arg = NULL;
   args_info->domain_orig = NULL;
+  args_info->no_echo_flag = 0;
   
 }
 
@@ -84,6 +88,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->help_help = gengetopt_args_info_help[0] ;
   args_info->version_help = gengetopt_args_info_help[1] ;
   args_info->domain_help = gengetopt_args_info_help[2] ;
+  args_info->no_echo_help = gengetopt_args_info_help[3] ;
   
 }
 
@@ -211,6 +216,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "version", 0, 0 );
   if (args_info->domain_given)
     write_into_file(outfile, "domain", args_info->domain_orig, 0);
+  if (args_info->no_echo_given)
+    write_into_file(outfile, "no-echo", 0, 0 );
   
 
   i = EXIT_SUCCESS;
@@ -405,6 +412,9 @@ int update_arg(void *field, char **orig_field,
     val = possible_values[found];
 
   switch(arg_type) {
+  case ARG_FLAG:
+    *((int *)field) = !*((int *)field);
+    break;
   case ARG_STRING:
     if (val) {
       string_field = (char **)field;
@@ -422,6 +432,7 @@ int update_arg(void *field, char **orig_field,
   /* store the original value */
   switch(arg_type) {
   case ARG_NO:
+  case ARG_FLAG:
     break;
   default:
     if (value && orig_field) {
@@ -485,10 +496,11 @@ cmdline_parser_internal (
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 'V' },
         { "domain",	1, NULL, 'd' },
+        { "no-echo",	0, NULL, 'e' },
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hVd:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVd:e", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -504,7 +516,7 @@ cmdline_parser_internal (
           cmdline_parser_free (&local_args_info);
           exit (EXIT_SUCCESS);
 
-        case 'd':	/* Path to server socket.  */
+        case 'd':	/* Absolute path of server socket.  */
         
         
           if (update_arg( (void *)&(args_info->domain_arg), 
@@ -512,6 +524,16 @@ cmdline_parser_internal (
               &(local_args_info.domain_given), optarg, 0, 0, ARG_STRING,
               check_ambiguity, override, 0, 0,
               "domain", 'd',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 'e':	/* Do not return recieved messages to their sender.  */
+        
+        
+          if (update_arg((void *)&(args_info->no_echo_flag), 0, &(args_info->no_echo_given),
+              &(local_args_info.no_echo_given), optarg, 0, 0, ARG_FLAG,
+              check_ambiguity, override, 1, 0, "no-echo", 'e',
               additional_error))
             goto failure;
         

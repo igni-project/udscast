@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 			
 			if (FD_ISSET(client_fd, &read_fds))
 			{
-				proc_msg(&clients, i);
+				proc_msg(&clients, i, !args_info.no_echo_flag);
 			}
 
 			--i;

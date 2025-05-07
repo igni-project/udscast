@@ -3,4 +3,5 @@ version "0.1"
 purpose "Broadcast to all clients"
 
 option "domain" d "Absolute path of server socket" string required
+option "no-echo" e "Do not return recieved messages to their sender" flag off
 

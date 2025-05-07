@@ -39,13 +39,16 @@ struct gengetopt_args_info
 {
   const char *help_help; /**< @brief Print help and exit help description.  */
   const char *version_help; /**< @brief Print version and exit help description.  */
-  char * domain_arg;	/**< @brief Path to server socket.  */
-  char * domain_orig;	/**< @brief Path to server socket original value given at command line.  */
-  const char *domain_help; /**< @brief Path to server socket help description.  */
+  char * domain_arg;	/**< @brief Absolute path of server socket.  */
+  char * domain_orig;	/**< @brief Absolute path of server socket original value given at command line.  */
+  const char *domain_help; /**< @brief Absolute path of server socket help description.  */
+  int no_echo_flag;	/**< @brief Do not return recieved messages to their sender (default=off).  */
+  const char *no_echo_help; /**< @brief Do not return recieved messages to their sender help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int domain_given ;	/**< @brief Whether domain was given.  */
+  unsigned int no_echo_given ;	/**< @brief Whether no-echo was given.  */
 
 } ;
 

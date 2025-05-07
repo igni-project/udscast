@@ -17,7 +17,7 @@ int create_sock_arr(sock_arr *arr);
 int add_new_client(sock_arr *arr, int fd);
 int remove_client(sock_arr *arr, int idx);
 
-int proc_msg(sock_arr *arr, int idx);
+int proc_msg(sock_arr *arr, int idx, char echoback);
 
 #endif
 
