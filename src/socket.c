@@ -12,7 +12,7 @@
 /* buffer for recv() to put received data in */
 char buffer[MSG_BUFFER_SIZE];
 
-int create_sock_arr(sock_arr* arr)
+int create_sock_arr(sock_arr *arr)
 {
 	arr->count = 0;
 	arr->max = 1;

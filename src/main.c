@@ -11,7 +11,7 @@
 #include <sys/select.h>
 #include <errno.h>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	struct gengetopt_args_info args_info;
 	
