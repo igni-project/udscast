@@ -10,6 +10,7 @@
 #include <sys/time.h>
 #include <sys/select.h>
 #include <errno.h>
+#include <unistd.h>
 
 int main(int argc, char **argv)
 {
