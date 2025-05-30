@@ -1,36 +1,22 @@
-# Building and Installation
+# Build Instructions
 
 ## Prerequisites
 
 Specialised software is required in order to compile this source code. If one or more prerequisites are not installed, the final executable may not build or lack certain features.
 
-### Autotools
+### CMake
 
-This software uses the GNU Autotools system.
+Download [CMake](https://cmake.org/) from the website or via package manager.
 
-[GNU Autotools](https://en.wikipedia.org/wiki/GNU_Autotools) is readily
-available on most linux systems package managers.
+- Arch Linux: `sudo pacman -Syu cmake`
 
-- Arch Linux: `sudo pacman -Syu autoconf automake libtool`
-- Debian and Ubuntu: `sudo apt-get install -y autotools-dev autoconf`
-- Fedora: `sudo dnf install autoconf automake`
+## Building
 
-## Initialisation
-
-The repository itself, as cloned, is not quite ready for compilation. Autotools must download some additional files to function properly.
-
-Execute the `./bootstrap` script in the repository root to bootstrap Autotools.
-
-## Configuration
-
-Autotools creates a script named `configure` during the bootstrap process.
-Run `./configure` to change build settings and generate usable makefiles for compilation.
-
-## Compilation
-
-Build all binaries from source by using the `make` command.
-
-## Installation
-
-The command `sudo make install` shall install the final compiled program(s) onto your system.
+1. Create a new, empty 'build' folder.
+2. Open CMake by clicking its icon or entering `cmake-gui` in a command prompt.
+3. Set the source code directory to this repositories root folder.
+4. Set the build directory to the 'build' folder created in step 1.
+5. Click on the `Configure` button to configure project settings.
+6. When done configuring, click `Generate`, then `Open Project`.
+7. Build the project with the IDE of your choice.
 
