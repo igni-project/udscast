@@ -13,3 +13,6 @@ add_executable(
 	src/cmd/cmdline.c
 )
 
+install(TARGETS udscast)
+include(CPack)
+
