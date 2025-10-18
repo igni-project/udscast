@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15...4.0)
 
 project(
 	udscast
-	VERSION 0.2
+	VERSION 0.2.1
 	LANGUAGES C
 )
 

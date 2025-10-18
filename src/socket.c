@@ -34,7 +34,7 @@ int add_new_client(sock_arr *arr, int fd)
 	if (arr->count >= arr->max)
 	{
 		arr->max *= 2;
-		new_addr = realloc(arr->fds, arr->max);
+		new_addr = realloc(arr->fds, arr->max * sizeof(int));
 
 		if (!new_addr)
 		{
