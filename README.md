@@ -12,5 +12,5 @@ UDScast creates a Unix domain socket on launch. Clients may connect to this sock
 
 UDScast sends this recieved data to all clients connected to the same socket.
 
-![figure 2](img/udscast_fig1.svg)
+![figure 2](img/udscast_fig2.svg)
 
